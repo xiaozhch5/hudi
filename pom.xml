@@ -1164,6 +1164,10 @@
       <id>confluent</id>
       <url>https://packages.confluent.io/maven/</url>
     </repository>
+    <repository>
+      <id>hdp</id>
+      <url>https://repo.hortonworks.com/content/repositories/releases/</url>
+    </repository>
   </repositories>
 
   <profiles>
