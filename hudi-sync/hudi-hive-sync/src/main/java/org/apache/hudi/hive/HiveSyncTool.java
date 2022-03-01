@@ -78,6 +78,7 @@ public class HiveSyncTool extends AbstractSyncTool {
 
     try {
       if (cfg.enableKerberos) {
+        System.setProperty("java.security.krb5.conf", cfg.krb5Conf);
         Configuration conf = new Configuration();
         conf.set("hadoop.security.authentication", "kerberos");
         conf.set("kerberos.principal", cfg.principal);
