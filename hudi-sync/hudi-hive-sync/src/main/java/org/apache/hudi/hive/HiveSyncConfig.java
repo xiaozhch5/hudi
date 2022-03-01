@@ -123,6 +123,21 @@ public class HiveSyncConfig implements Serializable {
   @Parameter(names = {"--conditional-sync"}, description = "If true, only sync on conditions like schema change or partition change.")
   public Boolean isConditionalSync = false;
 
+  @Parameter(names = {"--enable-kerberos"}, description = "Whether hive configs kerberos")
+  public Boolean enableKerberos = false;
+
+  @Parameter(names = {"--krb5-conf"}, description = "krb5.conf file path")
+  public String krb5Conf = "/etc/krb5.conf";
+
+  @Parameter(names = {"--principal"}, description = "hive metastore principal")
+  public String principal = "hive/_HOST@EXAMPLE.COM";
+
+  @Parameter(names = {"--keytab-file"}, description = "hive metastore keytab file path")
+  public String keytabFile;
+
+  @Parameter(names = {"--keytab-name"}, description = "hive metastore keytab name")
+  public String keytabName;
+
   // enhance the similar function in child class
   public static HiveSyncConfig copy(HiveSyncConfig cfg) {
     HiveSyncConfig newConfig = new HiveSyncConfig();
@@ -147,6 +162,11 @@ public class HiveSyncConfig implements Serializable {
     newConfig.sparkSchemaLengthThreshold = cfg.sparkSchemaLengthThreshold;
     newConfig.withOperationField = cfg.withOperationField;
     newConfig.isConditionalSync = cfg.isConditionalSync;
+    newConfig.enableKerberos = cfg.enableKerberos;
+    newConfig.krb5Conf = cfg.krb5Conf;
+    newConfig.principal = cfg.principal;
+    newConfig.keytabFile = cfg.keytabFile;
+    newConfig.keytabName = cfg.keytabName;
     return newConfig;
   }
 
@@ -179,6 +199,11 @@ public class HiveSyncConfig implements Serializable {
       + ", sparkSchemaLengthThreshold=" + sparkSchemaLengthThreshold
       + ", withOperationField=" + withOperationField
       + ", isConditionalSync=" + isConditionalSync
+      + ", enableKerberos=" + enableKerberos
+      + ", krb5Conf=" + krb5Conf
+      + ", principal=" + principal
+      + ", keytabFile=" + keytabFile
+      + ", keytabName=" + keytabName
       + '}';
   }
 }

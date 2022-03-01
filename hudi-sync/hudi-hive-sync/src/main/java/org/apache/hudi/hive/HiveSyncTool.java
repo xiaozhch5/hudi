@@ -23,6 +23,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.api.Partition;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hudi.common.fs.FSUtils;
 import org.apache.hudi.common.model.HoodieFileFormat;
 import org.apache.hudi.common.model.HoodieTableType;
@@ -43,6 +44,7 @@ import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,8 +77,19 @@ public class HiveSyncTool extends AbstractSyncTool {
     super(configuration.getAllProperties(), fs);
 
     try {
+      if (cfg.enableKerberos) {
+        Configuration conf = new Configuration();
+        conf.set("hadoop.security.authentication", "kerberos");
+        conf.set("kerberos.principal", cfg.principal);
+        UserGroupInformation.setConfiguration(conf);
+        UserGroupInformation.loginUserFromKeytab(cfg.keytabName, cfg.keytabFile);
+        configuration.set(HiveConf.ConfVars.METASTORE_USE_THRIFT_SASL.varname, "true");
+        configuration.set(HiveConf.ConfVars.METASTORE_KERBEROS_PRINCIPAL.varname, cfg.principal);
+        configuration.set(HiveConf.ConfVars.METASTORE_KERBEROS_KEYTAB_FILE.varname, cfg.keytabFile);
+      }
+
       this.hoodieHiveClient = new HoodieHiveClient(cfg, configuration, fs);
-    } catch (RuntimeException e) {
+    } catch (RuntimeException | IOException e) {
       if (cfg.ignoreExceptions) {
         LOG.error("Got runtime exception when hive syncing, but continuing as ignoreExceptions config is set ", e);
       } else {

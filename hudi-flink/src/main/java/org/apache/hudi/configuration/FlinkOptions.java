@@ -653,6 +653,36 @@ public class FlinkOptions extends HoodieConfig {
       .withDescription("INT64 with original type TIMESTAMP_MICROS is converted to hive timestamp type.\n"
           + "Disabled by default for backward compatibility.");
 
+  public static final ConfigOption<Boolean> HIVE_SYNC_KERBEROS_ENABLE = ConfigOptions
+      .key("hive_sync.kerberos.enable")
+      .booleanType()
+      .defaultValue(false)
+      .withDescription("Whether hive is configured with kerberos");
+
+  public static final ConfigOption<String> HIVE_SYNC_KERBEROS_KRB5CONF = ConfigOptions
+      .key("hive_sync.kerberos.krb5.conf")
+      .stringType()
+      .defaultValue("")
+      .withDescription("kerberos krb5.conf file path");
+
+  public static final ConfigOption<String> HIVE_SYNC_KERBEROS_PRINCIPAL = ConfigOptions
+      .key("hive_sync.kerberos.principal")
+      .stringType()
+      .defaultValue("")
+      .withDescription("hive metastore kerberos principal");
+
+  public static final ConfigOption<String> HIVE_SYNC_KERBEROS_KEYTAB_FILE = ConfigOptions
+      .key("hive_sync.kerberos.keytab.file")
+      .stringType()
+      .defaultValue("")
+      .withDescription("Hive metastore keytab file path");
+
+  public static final ConfigOption<String> HIVE_SYNC_KERBEROS_KEYTAB_NAME = ConfigOptions
+      .key("hive_sync.kerberos.keytab.name")
+      .stringType()
+      .defaultValue("")
+      .withDescription("Hive metastore keytab file name");
+
   // -------------------------------------------------------------------------
   //  Utilities
   // -------------------------------------------------------------------------
